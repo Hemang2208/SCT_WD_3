@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Tic Tac Toe Game created by Hemang Dutt Mishra">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="Hemang Dutt Mishra">
+    <title>Tic-Tac-Toe Game</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: purple;
+            background-image: url(https://s3-alpha.figma.com/hub/file/479379372/7e6df39f-585d-4a9e-9bf3-4ef4c00f816b-cover.png);
+            background-position: center;
+            text-align: center;
+        }
+
+        .container {
+            height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game {
+            height: 60vmin;
+            width: 60vmin;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5vmin;
+        }
+
+        .box {
+            height: 18vmin;
+            width: 18vmin;
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+            font-size: 8vmin;
+            color: red;
+            background-color: blanchedalmond;
+            cursor: pointer;
+        }
+
+        #reset-btn,
+        #new-btn {
+            padding: 1rem;
+            font-size: 1.25rem;
+            background-color: #191913;
+            color: whitesmoke;
+            border-radius: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        #msg {
+            color: blanchedalmond;
+            font-size: 5vmin;
+        }
+
+        .msg-container {
+            height: 100vmin;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .logo,
+        .logo a {
+            font-size: x-large;
+            text-align: center;
+            color: black;
+            text-decoration: none;
+        }
+
+        .logo a:hover {
+            color: blanchedalmond;
+            transition-duration: 500ms;
+        }
+
+        .h1 {
+            font-size: 60px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="msg-container hide">
+        <p id="msg">Winner</p>
+        <button id="new-btn">New Game</button>
+    </div>
+
+    <main>
+        <h1 class="h1">Tic Tac Toe</h1>
+        <div class="container">
+            <div class="game">
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+            </div>
+        </div>
+        <button id="reset-btn">Reset Game</button>
+
+        <div class="logo">
+            Created By: <strong> Hemang Dutt Mishra </strong>
+            <br>
+            <a href="https://www.linkedin.com/in/hemang2208/">"CONNECT"</a>
+        </div>
+    </main>
+
+    <script>
+        let boxes = document.querySelectorAll(".box");
+        let resetBtn = document.querySelector("#reset-btn");
+        let newGameBtn = document.querySelector("#new-btn");
+        let msgContainer = document.querySelector(".msg-container");
+        let msg = document.querySelector("#msg");
+        let turnO = true;
+        let count = 0;
+
+        const winPatterns = [
+            [0, 1, 2],
+            [0, 3, 6],
+            [0, 4, 8],
+            [1, 4, 7],
+            [2, 5, 8],
+            [2, 4, 6],
+            [3, 4, 5],
+            [6, 7, 8],
+        ];
+
+        // Reset the game
+        const resetGame = () => {
+            turnO = true;
+            count = 0;
+            enableBoxes();
+            msgContainer.classList.add("hide");
+        };
+
+        // Show the winner message on screen
+        const showWinner = (winner) => {
+            msg.innerText = `Congratulations, ${winner} Wins!`;
+            msgContainer.classList.remove("hide");
+            disableBoxes();
+        };
+
+        // Handle for a draw
+        const gameDraw = () => {
+            msg.innerText = "It's a Draw!";
+            msgContainer.classList.remove("hide");
+            disableBoxes();
+        };
+
+        // Disable for all boxes
+        const disableBoxes = () => {
+            boxes.forEach((box) => {
+                box.disabled = true;
+            });
+        };
+
+        // Enable for all boxes
+        const enableBoxes = () => {
+            boxes.forEach((box) => {
+                box.disabled = false;
+                box.innerText = "";
+            });
+        };
+
+        // Check for Winner
+        const checkWinner = () => {
+            for (let pattern of winPatterns) {
+                let pos1 = boxes[pattern[0]].innerText;
+                let pos2 = boxes[pattern[1]].innerText;
+                let pos3 = boxes[pattern[2]].innerText;
+
+                if (pos1 !== "" && pos2 !== "" && pos3 !== "") {
+                    if (pos1 === pos2 && pos2 === pos3) {
+                        showWinner(pos1);
+                        return true;
+                    }
+                }
+            }
+        };
+
+        // Handle for box clicks
+        boxes.forEach((box) => {
+            box.addEventListener("click", () => {
+                if (box.innerText === "" && count < 9) {
+                    if (turnO) {
+                        box.innerText = "O";
+                    }
+                    else {
+                        box.innerText = "X";
+                    }
+                    box.disabled = true;
+                    count++;
+
+                    if (checkWinner()) return;
+                    if (count === 9) gameDraw();
+
+                    turnO = !turnO;
+                }
+            });
+        });
+
+        newGameBtn.addEventListener("click", resetGame);
+        resetBtn.addEventListener("click", resetGame);
+
+        resetGame();
+    </script>
+
+</body>
+
+</html>
