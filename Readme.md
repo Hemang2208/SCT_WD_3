@@ -36,7 +36,7 @@ This is a **Tic-Tac-Toe** game where two players alternate to place either "X" o
 
 1. **Clone the repository** to your local machine:
    ```bash
-   git clone https://github.com/your-username/tic-tac-toe-game.git
+   git clone https://github.com/Hemang2208/SCT_WD_3.git
    ```
 
 2. **Navigate to the project folder**:
